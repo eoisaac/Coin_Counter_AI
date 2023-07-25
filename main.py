@@ -1,6 +1,6 @@
-from coin_detector import CoinDetector
+from coin_counter import CoinCounter
 
 
 if __name__ == "__main__":
-    coin_detector = CoinDetector()
-    coin_detector.capture_video()
+    coin_counter = CoinCounter()
+    coin_counter.count_coins()
