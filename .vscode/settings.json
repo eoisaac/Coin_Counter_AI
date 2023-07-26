@@ -1,7 +1,11 @@
 {
     "cSpell.words": [
+        "astype",
         "DSHOW",
+        "dtype",
         "imshow",
+        "keras",
+        "ndarray",
         "termcolor"
     ]
 }
