@@ -5,6 +5,7 @@
         "DSHOW",
         "dtype",
         "imshow",
+        "imwrite",
         "keras",
         "ndarray",
         "termcolor"
