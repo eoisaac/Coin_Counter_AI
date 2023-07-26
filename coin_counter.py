@@ -7,13 +7,34 @@ from keras.models import load_model
 class CoinCounter:
     def __init__(self):
         self._min_coin_area = 2000
-        self.coin_classes = ["1 real", "50 cents", "25 cents"]
+        self.coins = {
+            "1_real": {
+                "label": "1 real",
+                "value": 1,
+            },
+            "50_cents": {
+                "label": "50 centavos",
+                "value": 0.5,
+            },
+            "25_cents": {
+                "label": "25 centavos",
+                "value": 0.25,
+            },
+            # "10_cents": {
+            #     "label": "10 centavos",
+            #     "value": 0.1,
+            # },
+            # "5_cents": {
+            #     "label": "5 centavos",
+            #     "value": 0.05,
+            # },
+        }
+        self.coin_classes = list(self.coins.keys())
 
         self._model = load_model("./keras_model.h5", compile=False)
         self._data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
         self._video = cv2.VideoCapture(0)
-        pass
 
     def _video_pre_processing(self, img):
         pre_img = cv2.GaussianBlur(img, (5, 5), 3)
@@ -75,24 +96,16 @@ class CoinCounter:
                         coin_class, percentage = self._detect_coins(area_img)
 
                         if percentage > 0.7:
-                            cv2.putText(img, coin_class, (x, y),
+                            cv2.putText(img, coin_class, (x, y - 10),
                                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-                            if coin_class == "1 real":
-                                amount += 1
-                            elif coin_class == "50 cents":
-                                amount += 0.5
-                            elif coin_class == "25 cents":
-                                amount += 0.25
+                            amount += self.coins[coin_class]["value"]
 
-                # self._show_video(pre_img, img)
                 cv2.rectangle(img, (430, 30), (600, 80), (0, 0, 0), -1)
                 cv2.putText(img, f'R$ {amount}', (440, 67),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255), 2)
 
-                cv2.imshow('IMG', img)
-                cv2.imshow('IMG PRE', pre_img)
-                cv2.waitKey(1)
+                self._show_video(pre_img, img)
 
         except KeyboardInterrupt:
             print(colored("\nExiting...", "red", attrs=["bold"]))
